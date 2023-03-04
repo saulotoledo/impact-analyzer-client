@@ -1,11 +1,14 @@
 import React from 'react';
+import { BrowserRouter } from 'react-router-dom';
+
+import AppRouter from '../routes/AppRouter';
+import Navbar from './Navbar';
 
 const App: React.FC = () => (
-  <div className="App">
-    <p>
-      Edit <code>src/App.tsx</code> and save to reload.
-    </p>
-  </div>
+  <BrowserRouter>
+    <Navbar />
+    <AppRouter />
+  </BrowserRouter>
 );
 
 export default App;
