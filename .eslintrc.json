@@ -57,6 +57,7 @@
     "no-shadow": "off",
     "no-use-before-define": "off",
     "prettier/prettier": "error",
+    "react/function-component-definition": "off",
     "react/jsx-filename-extension": [
       "warn",
       {
