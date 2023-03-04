@@ -1,0 +1,12 @@
+version: '3.4'
+
+services:
+  impact-analyzer-client-app:
+    container_name: impact-analyzer-client-app
+    image: impact-analyzer-client-app
+    build:
+      context: .
+    ports:
+      - 3000:3000
+    volumes:
+      - .:/workspace:cached
