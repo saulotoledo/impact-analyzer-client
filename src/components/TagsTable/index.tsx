@@ -65,8 +65,9 @@ const TagsTable: React.FC = () => {
               { name: 'ID', width: 40 },
               { name: 'Name', width: 'auto' },
               { name: 'Actions', width: 60 },
-            ].map((col) => (
+            ].map((col, index) => (
               <TableCell
+                key={index}
                 sx={{
                   width: col.width,
                   color: (theme: Theme) => theme.palette.common.white,

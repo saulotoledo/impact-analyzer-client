@@ -5,6 +5,9 @@ import SubdirectoryArrowRightIcon from '@mui/icons-material/SubdirectoryArrowRig
 import Box from '@mui/material/Box';
 import IconButton from '@mui/material/IconButton';
 import DeleteIcon from '@mui/icons-material/Delete';
+import EditIcon from '@mui/icons-material/Edit';
+import { Link } from 'react-router-dom';
+
 import Tag from '../../interfaces/Tag';
 
 interface TagsTableEntryProps {
@@ -20,16 +23,19 @@ const TagsTableEntry: React.FC<TagsTableEntryProps> = ({
 }) => (
   <>
     {tags.map((tag) => (
-      <>
-        <TableRow key={tag.id}>
+      <React.Fragment key={tag.id}>
+        <TableRow>
           <TableCell>
-            <Typography variant="body1">{tag.id}</Typography>
+            <Typography variant="body1">
+              <Link to={`/tag/${tag.id}`}>{tag.id}</Link>
+            </Typography>
           </TableCell>
           <TableCell>
             <Typography variant="body1">
               {depth > 0 && (
                 <>
                   <Box
+                    component="span"
                     sx={{
                       width: `${32 * depth}px`,
                       height: '10px',
@@ -43,11 +49,18 @@ const TagsTableEntry: React.FC<TagsTableEntryProps> = ({
             </Typography>
           </TableCell>
           <TableCell>
-            <Typography variant="body1">
+            <Box display="flex" flexDirection="row" component="span">
+              <IconButton
+                aria-label="edit"
+                component={Link}
+                to={`/tag/${tag.id}`}
+              >
+                <EditIcon />
+              </IconButton>
               <IconButton aria-label="delete" onClick={() => onDelete(tag.id)}>
                 <DeleteIcon />
               </IconButton>
-            </Typography>
+            </Box>
           </TableCell>
         </TableRow>
         {tag.children && (
@@ -57,7 +70,7 @@ const TagsTableEntry: React.FC<TagsTableEntryProps> = ({
             onDelete={onDelete}
           />
         )}
-      </>
+      </React.Fragment>
     ))}
   </>
 );
