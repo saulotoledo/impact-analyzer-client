@@ -22,8 +22,9 @@ const TagsTable: React.FC = () => {
   const [items, setItems] = useState<Tag[]>([]);
   const [message, setMessage] = useState<string>();
 
-  useEffect(() => {
+  const loadTags = (): void => {
     setIsLoading(true);
+    setMessage('');
     TagsService.getTags().then(
       (result: Tag[]) => {
         setItems(result);
@@ -34,7 +35,20 @@ const TagsTable: React.FC = () => {
         setMessage(error.message);
       }
     );
-  }, []);
+  };
+
+  const onDelete = (id: number): void => {
+    setIsLoading(true);
+    setMessage('');
+
+    // TODO: Remove the additional call to the API with the load below:
+    TagsService.deleteTag(id).then(loadTags, (error: Error) => {
+      setIsLoading(false);
+      setMessage(error.message);
+    });
+  };
+
+  useEffect(loadTags, []);
 
   return (
     <TableContainer sx={{ overflowX: 'auto' }} component={Paper}>
@@ -88,7 +102,7 @@ const TagsTable: React.FC = () => {
               </TableCell>
             </TableRow>
           )}
-          {!isLoading && <TagsTableEntry tags={items} />}
+          {!isLoading && <TagsTableEntry tags={items} onDelete={onDelete} />}
         </TableBody>
       </Table>
     </TableContainer>

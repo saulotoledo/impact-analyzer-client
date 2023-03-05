@@ -5,10 +5,8 @@ import Tag from '../interfaces/Tag';
 const getTags = async (): Promise<Tag[]> =>
   new Promise(
     (
-      // eslint-disable-next-line no-unused-vars
-      resolve: (value: Tag[] | PromiseLike<Tag[]>) => void,
-      // eslint-disable-next-line no-unused-vars
-      reject: (reason: Error) => void
+      resolve: (_value: Tag[] | PromiseLike<Tag[]>) => void,
+      reject: (_reason: Error) => void
     ): void => {
       axios
         .get('/tag', { params: {} })
@@ -16,8 +14,21 @@ const getTags = async (): Promise<Tag[]> =>
     }
   );
 
+const deleteTag = async (id: number): Promise<void> =>
+  new Promise(
+    (
+      resolve: (_value: void | PromiseLike<void>) => void,
+      reject: (_reason: Error) => void
+    ): void => {
+      axios
+        .delete(`/tag/${id}`)
+        .then((_result: AxiosResponse<void>) => resolve(), reject);
+    }
+  );
+
 const TagsService = {
   getTags,
+  deleteTag,
 };
 
 export default TagsService;

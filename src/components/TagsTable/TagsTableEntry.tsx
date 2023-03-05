@@ -10,9 +10,14 @@ import Tag from '../../interfaces/Tag';
 interface TagsTableEntryProps {
   tags: Tag[];
   depth?: number;
+  onDelete: (_id: number) => void;
 }
 
-const TagsTableEntry: React.FC<TagsTableEntryProps> = ({ tags, depth = 0 }) => (
+const TagsTableEntry: React.FC<TagsTableEntryProps> = ({
+  tags,
+  depth = 0,
+  onDelete,
+}) => (
   <>
     {tags.map((tag) => (
       <>
@@ -39,14 +44,18 @@ const TagsTableEntry: React.FC<TagsTableEntryProps> = ({ tags, depth = 0 }) => (
           </TableCell>
           <TableCell>
             <Typography variant="body1">
-              <IconButton aria-label="delete">
+              <IconButton aria-label="delete" onClick={() => onDelete(tag.id)}>
                 <DeleteIcon />
               </IconButton>
             </Typography>
           </TableCell>
         </TableRow>
         {tag.children && (
-          <TagsTableEntry tags={tag.children} depth={depth + 1} />
+          <TagsTableEntry
+            tags={tag.children}
+            depth={depth + 1}
+            onDelete={onDelete}
+          />
         )}
       </>
     ))}
