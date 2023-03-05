@@ -56,6 +56,13 @@
     ],
     "no-param-reassign": "off",
     "no-shadow": "off",
+    "no-unused-vars": [
+      "error",
+      {
+        "varsIgnorePattern": "^_",
+        "argsIgnorePattern": "^_"
+      }
+    ],
     "no-use-before-define": "off",
     "prettier/prettier": "error",
     "react/function-component-definition": "off",

@@ -48,7 +48,7 @@ const Page: React.FC<PageProps> = (props: PageProps) => {
           ))}
         </Grid>
       </Grid>
-      <Grid container item xs={12} direction="row">
+      <Grid container item xs={12} direction="row" sx={{ overflowX: 'auto' }}>
         {children}
       </Grid>
     </Container>

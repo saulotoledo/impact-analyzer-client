@@ -1,5 +1,5 @@
 export default interface Tag {
   id: number;
   name: string;
-  parentId?: number;
+  children: Tag[];
 }

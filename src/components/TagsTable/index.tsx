@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {
   CircularProgress,
+  lighten,
   Paper,
   Table,
   TableBody,
@@ -11,11 +12,10 @@ import {
   Theme,
   Typography,
 } from '@mui/material';
-import DeleteIcon from '@mui/icons-material/Delete';
-import IconButton from '@mui/material/IconButton';
 
 import Tag from '../../interfaces/Tag';
 import TagsService from '../../services/tags.service';
+import TagsTableEntry from './TagsTableEntry';
 
 const TagsTable: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
@@ -37,22 +37,39 @@ const TagsTable: React.FC = () => {
   }, []);
 
   return (
-    <TableContainer className="TagsTable" component={Paper}>
-      <Table sx={{ minWidth: 700 }} aria-label="customized table">
+    <TableContainer sx={{ overflowX: 'auto' }} component={Paper}>
+      <Table aria-label="customized table">
         <TableHead>
-          <TableRow>
-            <TableCell style={{ width: 60 }}>
-              <Typography variant="body1">ID</Typography>
-            </TableCell>
-            <TableCell style={{ width: 500 }}>
-              <Typography variant="body1">Name</Typography>
-            </TableCell>
-            <TableCell style={{ width: 60 }}>
-              <Typography variant="body1">Actions</Typography>
-            </TableCell>
+          <TableRow
+            sx={{
+              backgroundColor: (theme: Theme) =>
+                lighten(theme.palette.common.black, 0.3),
+              fontWeight: (theme: Theme) => theme.typography.fontWeightBold,
+            }}
+          >
+            {[
+              { name: 'ID', width: 40 },
+              { name: 'Name', width: 'auto' },
+              { name: 'Actions', width: 60 },
+            ].map((col) => (
+              <TableCell
+                sx={{
+                  width: col.width,
+                  color: (theme: Theme) => theme.palette.common.white,
+                }}
+              >
+                <Typography variant="body1">{col.name}</Typography>
+              </TableCell>
+            ))}
           </TableRow>
         </TableHead>
-        <TableBody>
+        <TableBody
+          sx={{
+            '& tr:nth-of-type(even)': {
+              backgroundColor: (theme: Theme) => theme.palette.action.hover,
+            },
+          }}
+        >
           {isLoading && (
             <TableRow>
               <TableCell align="center" colSpan={3}>
@@ -71,24 +88,7 @@ const TagsTable: React.FC = () => {
               </TableCell>
             </TableRow>
           )}
-          {!isLoading &&
-            items.map(({ id, name }) => (
-              <TableRow key={id}>
-                <TableCell>
-                  <Typography variant="body1">{id}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body1">{name}</Typography>
-                </TableCell>
-                <TableCell>
-                  <Typography variant="body1">
-                    <IconButton aria-label="delete">
-                      <DeleteIcon />
-                    </IconButton>
-                  </Typography>
-                </TableCell>
-              </TableRow>
-            ))}
+          {!isLoading && <TagsTableEntry tags={items} />}
         </TableBody>
       </Table>
     </TableContainer>
