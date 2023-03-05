@@ -6,12 +6,7 @@ import routes from './index';
 const AppRouter: React.FC = () => (
   <Routes>
     {routes.map((route, key) => (
-      <Route
-        key={key}
-        path={route.path}
-        element={route.element}
-        // exact={route.end === true}
-      />
+      <Route key={key} path={route.path} element={route.element} />
     ))}
   </Routes>
 );

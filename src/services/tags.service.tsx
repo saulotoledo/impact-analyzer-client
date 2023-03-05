@@ -2,14 +2,12 @@ import { AxiosError, AxiosResponse } from 'axios';
 
 import axios from '../axios';
 import Tag from '../interfaces/Tag';
-
-type ResolveType<T> = (_value: T | PromiseLike<T>) => void;
-type RejectType = (_reason: Error) => void;
+import { RejectType, ResolveType } from '../react-app-env';
 
 const getTags = async (): Promise<Tag[]> =>
   new Promise((resolve: ResolveType<Tag[]>, reject: RejectType): void => {
     axios
-      .get('/tag', { params: {} })
+      .get('/tag/', { params: {} })
       .then((result: AxiosResponse<Tag[]>) => resolve(result.data), reject);
   });
 

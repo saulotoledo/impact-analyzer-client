@@ -1,6 +1,7 @@
 import React from 'react';
 import { RouteProps } from 'react-router-dom';
 
+import TablesListPage from '../pages/TablesListPage';
 import TagEditPage from '../pages/TagEditPage';
 import TagsListPage from '../pages/TagsListPage';
 
@@ -10,6 +11,12 @@ export type MyRouteProps = RouteProps & {
 };
 
 const routes: MyRouteProps[] = [
+  {
+    name: 'tables',
+    label: 'Tables',
+    path: '/',
+    element: React.createElement(TablesListPage),
+  },
   {
     name: 'tags',
     label: 'Tags',
