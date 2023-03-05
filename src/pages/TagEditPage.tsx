@@ -7,7 +7,7 @@ import Page from '../components/Page';
 const actions = [
   {
     label: 'Return to all tags',
-    link: '/',
+    link: '/tags',
   },
 ];
 

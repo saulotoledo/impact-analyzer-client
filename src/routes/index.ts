@@ -13,16 +13,14 @@ const routes: MyRouteProps[] = [
   {
     name: 'tags',
     label: 'Tags',
-    path: '/',
+    path: '/tags',
     element: React.createElement(TagsListPage),
-    // exact: true,
   },
   {
     name: 'tag',
     label: 'Tag details',
     path: '/tag/:id',
     element: React.createElement(TagEditPage),
-    // exact: true,
   },
 ];
 
