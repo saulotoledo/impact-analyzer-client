@@ -16,17 +16,18 @@ import IconButton from '@mui/material/IconButton';
 import EditIcon from '@mui/icons-material/Edit';
 import { Link } from 'react-router-dom';
 
+import Message from '../../interfaces/Message';
 import TableEntity from '../../interfaces/Table';
 import TablesService from '../../services/tables.service';
 
 const TablesTable: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [items, setItems] = useState<TableEntity[]>([]);
-  const [message, setMessage] = useState<string>();
+  const [message, setMessage] = useState<Message>();
 
   const loadTables = (): void => {
     setIsLoading(true);
-    setMessage('');
+    setMessage(undefined);
     TablesService.getTables().then(
       (result: TableEntity[]) => {
         setItems(result);
@@ -34,7 +35,10 @@ const TablesTable: React.FC = () => {
       },
       (error: Error) => {
         setIsLoading(false);
-        setMessage(error.message);
+        setMessage({
+          type: 'error',
+          body: error.message,
+        });
       }
     );
   };
@@ -88,8 +92,12 @@ const TablesTable: React.FC = () => {
           {!isLoading && (message || items.length === 0) && (
             <TableRow>
               <TableCell align="center" colSpan={3}>
-                <Typography variant="body1" color="error" component="p">
-                  {message || 'No tables registered'}
+                <Typography
+                  variant="body1"
+                  color={message?.type ?? 'error'}
+                  component="p"
+                >
+                  {message?.body ?? 'No tables registered'}
                 </Typography>
               </TableCell>
             </TableRow>

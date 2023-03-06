@@ -3,7 +3,6 @@ import React, { useCallback, useState } from 'react';
 import { useDropzone } from 'react-dropzone';
 import {
   Alert,
-  AlertColor,
   Box,
   Button,
   CircularProgress,
@@ -12,6 +11,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import Message from '../../interfaces/Message';
 import TablesService from '../../services/tables.service';
 
 type TableUploadProps = {
@@ -20,8 +20,7 @@ type TableUploadProps = {
 
 const TableUpload: React.FC<TableUploadProps> = ({ onSuccess }) => {
   const [uploading, setUploading] = useState(false);
-  const [message, setMessage] = useState<string>();
-  const [messageType, setMessageType] = useState<AlertColor>();
+  const [message, setMessage] = useState<Message>();
 
   const onDrop = useCallback((acceptedFiles: File[]) => {
     setUploading(true);
@@ -31,14 +30,19 @@ const TableUpload: React.FC<TableUploadProps> = ({ onSuccess }) => {
         if (onSuccess) {
           onSuccess();
         }
-        setMessage('File uploaded successfully!');
-        setMessageType('success');
+        setMessage({
+          type: 'success',
+          body: 'File uploaded successfully!',
+        });
       })
       .catch((error) => {
         setUploading(false);
-        setMessage(error.message);
-        setMessageType('error');
+        setMessage({
+          type: 'error',
+          body: error.message,
+        });
       });
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   const { getRootProps, getInputProps, isDragActive } = useDropzone({
@@ -54,7 +58,7 @@ const TableUpload: React.FC<TableUploadProps> = ({ onSuccess }) => {
       {message && (
         <Grid container spacing={2}>
           <Grid item xs={12} pb={2}>
-            <Alert severity={messageType}>{message}</Alert>
+            <Alert severity={message?.type || 'error'}>{message.body}</Alert>
           </Grid>
         </Grid>
       )}

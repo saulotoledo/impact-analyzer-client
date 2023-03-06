@@ -13,6 +13,7 @@ import {
   Typography,
 } from '@mui/material';
 
+import Message from '../../interfaces/Message';
 import Tag from '../../interfaces/Tag';
 import TagsService from '../../services/tags.service';
 import TagsTableEntry from './TagsTableEntry';
@@ -20,11 +21,11 @@ import TagsTableEntry from './TagsTableEntry';
 const TagsTable: React.FC = () => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [items, setItems] = useState<Tag[]>([]);
-  const [message, setMessage] = useState<string>();
+  const [message, setMessage] = useState<Message>();
 
   const loadTags = (): void => {
     setIsLoading(true);
-    setMessage('');
+    setMessage(undefined);
     TagsService.getTags().then(
       (result: Tag[]) => {
         setItems(result);
@@ -32,19 +33,25 @@ const TagsTable: React.FC = () => {
       },
       (error: Error) => {
         setIsLoading(false);
-        setMessage(error.message);
+        setMessage({
+          type: 'error',
+          body: error.message,
+        });
       }
     );
   };
 
   const onDelete = (id: number): void => {
     setIsLoading(true);
-    setMessage('');
+    setMessage(undefined);
 
     // TODO: Remove the additional call to the API with the load below:
     TagsService.deleteTag(id).then(loadTags, (error: Error) => {
       setIsLoading(false);
-      setMessage(error.message);
+      setMessage({
+        type: 'error',
+        body: error.message,
+      });
     });
   };
 
@@ -98,7 +105,7 @@ const TagsTable: React.FC = () => {
             <TableRow>
               <TableCell align="center" colSpan={3}>
                 <Typography variant="body1" color="error" component="p">
-                  {message || 'No tags registered'}
+                  {message?.body ?? 'No tags registered'}
                 </Typography>
               </TableCell>
             </TableRow>

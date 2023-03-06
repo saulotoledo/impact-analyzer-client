@@ -1,4 +1,6 @@
+import { AlertColor } from '@mui/material';
+
 export default interface Message {
-  type: 'error' | 'success' | 'warning';
+  type: AlertColor;
   body: string;
 }
