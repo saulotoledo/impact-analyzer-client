@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
+
 import TablesTable from '../components/TablesTable/';
 import TableUpload from '../components/TableUpload/';
-
 import Page from '../components/Page';
 
 const TablesListPage: React.FC = () => {

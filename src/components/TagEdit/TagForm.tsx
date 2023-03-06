@@ -11,6 +11,7 @@ import {
 import { Formik, FormikHelpers } from 'formik';
 
 import Tag from '../../interfaces/Tag';
+import TagsService from '../../services/tags.service';
 
 interface TagFormProps {
   tagData: Tag;
@@ -19,22 +20,6 @@ interface TagFormProps {
   onSubmit: (_data: Tag) => Promise<void>;
   onTouch: () => void;
 }
-
-const flattenTags = (
-  tags: Tag[],
-  tagIdToIgnore: number,
-  flattenedTags: Tag[] = []
-): Tag[] => {
-  tags
-    .filter((tag: Tag): boolean => tag.id !== tagIdToIgnore)
-    .forEach((tag: Tag) => {
-      flattenedTags.push(tag);
-      if (tag.children && tag.children.length > 0) {
-        flattenTags(tag.children, tagIdToIgnore, flattenedTags);
-      }
-    });
-  return flattenedTags;
-};
 
 const TagForm: React.FC<TagFormProps> = ({
   tagData,
@@ -59,7 +44,7 @@ const TagForm: React.FC<TagFormProps> = ({
     parent_id: Yup.number().nullable(),
   });
 
-  const tagsList = flattenTags(tagsTree, tagData.id);
+  const tagsList = TagsService.flattenTags(tagsTree, tagData.id);
 
   return (
     <Formik

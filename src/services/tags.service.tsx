@@ -39,11 +39,28 @@ const updateTag = async (data: Tag): Promise<Tag> =>
       .then((result: AxiosResponse<Tag>) => resolve(result.data), reject);
   });
 
+const flattenTags = (
+  tags: Tag[],
+  tagIdToIgnore?: number,
+  flattenedTags: Tag[] = []
+): Tag[] => {
+  tags
+    .filter((tag: Tag): boolean => tag.id !== tagIdToIgnore)
+    .forEach((tag: Tag) => {
+      flattenedTags.push(tag);
+      if (tag.children && tag.children.length > 0) {
+        flattenTags(tag.children, tagIdToIgnore, flattenedTags);
+      }
+    });
+  return flattenedTags;
+};
+
 const TagsService = {
   getTag,
   getTags,
   deleteTag,
   updateTag,
+  flattenTags,
 };
 
 export default TagsService;

@@ -1,7 +1,7 @@
 import React from 'react';
 import { useParams } from 'react-router-dom';
-import TagEdit from '../components/TagEdit/';
 
+import TagEdit from '../components/TagEdit/';
 import Page from '../components/Page';
 
 const actions = [

@@ -2,6 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 
 import axiosInstance from '../axios';
 import Table from '../interfaces/Table';
+import TableField from '../interfaces/TableField';
 import { RejectType, ResolveType } from '../react-app-env';
 
 const getTables = async (): Promise<Table[]> =>
@@ -11,7 +12,19 @@ const getTables = async (): Promise<Table[]> =>
       .then((result: AxiosResponse<Table[]>) => resolve(result.data), reject);
   });
 
-const getTable = async (id: string): Promise<Table> =>
+const getTableEntries = async (tableId: number): Promise<TableField[][]> =>
+  new Promise(
+    (resolve: ResolveType<TableField[][]>, reject: RejectType): void => {
+      axiosInstance
+        .get(`/table/${tableId}/entry/`, { params: {} })
+        .then(
+          (result: AxiosResponse<TableField[][]>) => resolve(result.data),
+          reject
+        );
+    }
+  );
+
+const getTable = async (id: number): Promise<Table> =>
   new Promise((resolve: ResolveType<Table>, reject: RejectType): void => {
     axiosInstance.get(`/table/${id}/`).then(
       (result: AxiosResponse<Table>) => resolve(result.data),
@@ -43,6 +56,7 @@ const uploadTable = async (acceptedFiles: File[]): Promise<void> =>
 const TablesService = {
   getTable,
   getTables,
+  getTableEntries,
   uploadTable,
 };
 
