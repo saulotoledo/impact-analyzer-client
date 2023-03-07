@@ -13,14 +13,14 @@ import {
   Theme,
   Typography,
 } from '@mui/material';
-import { Link } from 'react-router-dom';
 
 import Message from '../../interfaces/Message';
 import TableEntity from '../../interfaces/Table';
 import TablesService from '../../services/tables.service';
 import TagsService from '../../services/tags.service';
 import Tag from '../../interfaces/Tag';
-import TableField from '../../interfaces/TableField';
+import TableEntry from '../../interfaces/TableEntry';
+import FloatingTags from './FloatingTags';
 
 interface TableEntriesTableProps {
   tableId?: number;
@@ -29,12 +29,14 @@ interface TableEntriesTableProps {
 const TableEntriesTable: React.FC<TableEntriesTableProps> = ({ tableId }) => {
   const [isLoading, setIsLoading] = useState<boolean>(true);
   const [table, setTable] = useState<TableEntity>();
-  const [tableEntries, setTableEntries] = useState<TableField[][]>();
+  const [tableEntries, setTableEntries] = useState<TableEntry[][]>();
+  const [lastChangedTableEntry, setLastChangedTableEntry] = useState<{
+    line: number;
+    column: number;
+    changedTimestamp: number;
+  }>();
   const [tagsList, setTagsList] = useState<Tag[]>();
   const [message, setMessage] = useState<Message>();
-
-  // eslint-disable-next-line no-console
-  console.log(tagsList);
 
   const errorCallback = (error: Error): void => {
     setIsLoading(false);
@@ -43,6 +45,14 @@ const TableEntriesTable: React.FC<TableEntriesTableProps> = ({ tableId }) => {
       body: error.message,
     });
   };
+
+  useEffect(() => {
+    if (tableId && lastChangedTableEntry && tableEntries) {
+      const tableEntry =
+        tableEntries[lastChangedTableEntry.line][lastChangedTableEntry.column];
+      TablesService.updateTableEntry(tableId, tableEntry).catch(errorCallback);
+    }
+  }, [tableId, lastChangedTableEntry, tableEntries]);
 
   useEffect(() => {
     if (tableId) {
@@ -130,18 +140,33 @@ const TableEntriesTable: React.FC<TableEntriesTableProps> = ({ tableId }) => {
               <TableRow key={rowIndex}>
                 {tableRow
                   ?.sort((a, b) => a.column - b.column)
-                  .map((tableField, colIndex) => (
-                    <TableCell>
-                      <Typography variant="body1">
-                        {colIndex === 0 && (
-                          <Link to={`/table/${colIndex}`}>
-                            {tableField.value}
-                          </Link>
-                        )}
-                        {colIndex !== 0 && (
-                          <Box component="span">{tableField.value}</Box>
-                        )}
-                      </Typography>
+                  .map((tableEntry, cellIndex) => (
+                    <TableCell key={cellIndex}>
+                      <Box
+                        sx={{
+                          display: 'flex',
+                          alignItems: 'center',
+                          justifyContent: 'middle',
+                          gap: 1,
+                        }}
+                      >
+                        <Typography variant="body1" sx={{ lineHeight: '40px' }}>
+                          {tableEntry.value}
+                        </Typography>
+                        <FloatingTags
+                          allTags={tagsList ?? []}
+                          tableEntry={tableEntry}
+                          onTagsChange={(tags: Tag[]) => {
+                            tableEntry.tags = tags.map((tag) => tag.id);
+                            setTableEntries(tableEntries);
+                            setLastChangedTableEntry({
+                              line: rowIndex,
+                              column: cellIndex,
+                              changedTimestamp: Date.now(),
+                            });
+                          }}
+                        />
+                      </Box>
                     </TableCell>
                   ))}
               </TableRow>

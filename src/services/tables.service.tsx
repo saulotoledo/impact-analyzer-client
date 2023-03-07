@@ -2,7 +2,7 @@ import axios, { AxiosError, AxiosResponse } from 'axios';
 
 import axiosInstance from '../axios';
 import Table from '../interfaces/Table';
-import TableField from '../interfaces/TableField';
+import TableEntry from '../interfaces/TableEntry';
 import { RejectType, ResolveType } from '../react-app-env';
 
 const getTables = async (): Promise<Table[]> =>
@@ -12,13 +12,13 @@ const getTables = async (): Promise<Table[]> =>
       .then((result: AxiosResponse<Table[]>) => resolve(result.data), reject);
   });
 
-const getTableEntries = async (tableId: number): Promise<TableField[][]> =>
+const getTableEntries = async (tableId: number): Promise<TableEntry[][]> =>
   new Promise(
-    (resolve: ResolveType<TableField[][]>, reject: RejectType): void => {
+    (resolve: ResolveType<TableEntry[][]>, reject: RejectType): void => {
       axiosInstance
         .get(`/table/${tableId}/entry/`, { params: {} })
         .then(
-          (result: AxiosResponse<TableField[][]>) => resolve(result.data),
+          (result: AxiosResponse<TableEntry[][]>) => resolve(result.data),
           reject
         );
     }
@@ -53,11 +53,31 @@ const uploadTable = async (acceptedFiles: File[]): Promise<void> =>
       .then((result: AxiosResponse<void>) => resolve(result.data), reject);
   });
 
+const updateTableEntry = async (
+  tableId: number,
+  tableEntry: TableEntry
+): Promise<TableEntry> =>
+  new Promise((resolve: ResolveType<TableEntry>, reject: RejectType): void => {
+    axiosInstance
+      .put(`/table/${tableId}/entry/${tableEntry.id}/`, tableEntry)
+      .then(
+        (result: AxiosResponse<TableEntry>) => resolve(result.data),
+        (error: AxiosError<{ code: number }>) => {
+          let errorMessage = error.message;
+          if (error.response && error.response.status === 404) {
+            errorMessage = 'The informed table was not found';
+          }
+          reject(new Error(errorMessage));
+        }
+      );
+  });
+
 const TablesService = {
   getTable,
   getTables,
   getTableEntries,
   uploadTable,
+  updateTableEntry,
 };
 
 export default TablesService;

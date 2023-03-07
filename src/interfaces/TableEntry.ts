@@ -1,4 +1,4 @@
-export default interface TableField {
+export default interface TableEntry {
   id: number;
   line: number;
   column: number;
