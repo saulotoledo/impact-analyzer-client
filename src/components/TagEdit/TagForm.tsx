@@ -109,38 +109,36 @@ const TagForm: React.FC<TagFormProps> = ({
                   is just for demonstration purposes, I disabled the field
                   below.
                 */}
-                {tagsList && tagsList.length && (
-                  <TextField
-                    id="parent_id"
-                    name="parent_id"
-                    autoComplete="parent_id"
-                    disabled
-                    fullWidth
-                    label="Parent tag"
-                    onBlur={handleBlur}
-                    onChange={handleChange}
-                    onFocus={() => onTouch()}
-                    required={false}
-                    select
-                    value={values.parent_id ?? ''}
-                    variant="outlined"
-                    error={!!errors.parent_id && touched.parent_id}
-                    helperText={
-                      errors.parent_id && touched.parent_id
-                        ? errors.parent_id
-                        : ''
-                    }
-                  >
-                    <MenuItem key="-1" value="">
-                      (None)
+                <TextField
+                  id="parent_id"
+                  name="parent_id"
+                  autoComplete="parent_id"
+                  disabled
+                  fullWidth
+                  label="Parent tag"
+                  onBlur={handleBlur}
+                  onChange={handleChange}
+                  onFocus={() => onTouch()}
+                  required={false}
+                  select
+                  value={values.parent_id ?? ''}
+                  variant="outlined"
+                  error={!!errors.parent_id && touched.parent_id}
+                  helperText={
+                    errors.parent_id && touched.parent_id
+                      ? errors.parent_id
+                      : ''
+                  }
+                >
+                  <MenuItem key="-1" value="">
+                    (None)
+                  </MenuItem>
+                  {tagsList?.map((tag) => (
+                    <MenuItem key={tag.id} value={tag.id}>
+                      {tag.name}
                     </MenuItem>
-                    {tagsList.map((tag) => (
-                      <MenuItem key={tag.id} value={tag.id}>
-                        {tag.name}
-                      </MenuItem>
-                    ))}
-                  </TextField>
-                )}
+                  ))}
+                </TextField>
               </Grid>
             </Grid>
             <Button
